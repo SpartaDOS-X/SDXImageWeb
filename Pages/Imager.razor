@@ -39,14 +39,17 @@
             </CardHeaderActions>
         </MudCardHeader>
         <MudCardContent>
-            <MudText>Type: @sdxRom.Type</MudText>
-            <MudText Typo="Typo.body2">@sdxRom.FileCount files</MudText>
-            <MudText Typo="Typo.body2">@sdxRom.FreeSpace bytes available</MudText>
-            <MudProgressLinear Value="@sdxRom.Occupied" Color="Color.Info" Size="Size.Large" Maximum="@sdxRom.Capacity" Class="my-7">
-                <MudText Typo="Typo.subtitle1" Color="Color.Dark">
-                    <b>@PercentUsed%</b>
-                </MudText>
-            </MudProgressLinear>
+            <MudPaper Class="d-flex flex-row gap-4" Elevation="0">
+                <MudPaper Class="d-inline-flex flex-column flex-grow-1 gap-4">
+                    <MudText>Type: @sdxRom.Type</MudText>
+                    <MudText Typo="Typo.body2">@sdxRom.FileCount files</MudText>
+                    <MudText Typo="Typo.body2">@sdxRom.FreeSpace of @sdxRom.Capacity bytes available</MudText>
+                </MudPaper>
+                <MudPaper Class="d-inline-flex">
+                    <MudChart ChartType="ChartType.Pie" InputData="@data" InputLabels="@labels" Width="150px" Height="150px" LegendPosition="Position.Left" />
+                </MudPaper>
+            </MudPaper>
+
         </MudCardContent>
         <MudCardActions>
             <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" @onclick="EditConfig">Edit CONFIG.SYS</MudButton>

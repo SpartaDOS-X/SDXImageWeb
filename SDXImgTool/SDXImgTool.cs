@@ -227,7 +227,7 @@ namespace SDXImageWeb
                     }
                     files.Add(file);
                 }
-            }
+            }      
         }
 
         public bool SaveImage(string filename)

@@ -14,6 +14,8 @@ namespace SDXImageWeb.Pages
 
         private HashSet<SDXFile> selectedItems = new HashSet<SDXFile>();
 
+        public double[] data = { 0, 0 };
+        public string[] labels = { "Free", "Occupied" };
 
         public int PercentUsed
         {
@@ -51,6 +53,7 @@ namespace SDXImageWeb.Pages
                 fileName = file.Name;
                 //currentCount = sdxRom.FileCount;
                 //this.StateHasChanged();
+                UpdateImageInfo(false);
             }
             else
             {
@@ -122,8 +125,8 @@ namespace SDXImageWeb.Pages
                     error = true;
                 }
             }
-
-            sdxRom.UpdateFileList();
+            
+            UpdateImageInfo();
 
             if (!error)
             {
@@ -132,6 +135,15 @@ namespace SDXImageWeb.Pages
                 else
                     Snackbar.Add($"{selectedItems.FirstOrDefault()?.Name} deleted", Severity.Success);
             }
+
+        }
+
+        private void UpdateImageInfo(bool reloadFiles = true)
+        {
+            if (reloadFiles)
+                sdxRom.UpdateFileList();
+            data[0] = sdxRom.FreeSpace;
+            data[1] = sdxRom.Occupied;
         }
 
         private async void Navigation_LocationChangedAsync(object? sender, LocationChangedEventArgs e)
@@ -161,9 +173,8 @@ namespace SDXImageWeb.Pages
         }
 
         private async Task OnFileUploaded(IBrowserFile file)
-        {          
-            sdxRom.UpdateFileList();
-
+        {
+            UpdateImageInfo();
         }
 
     }
