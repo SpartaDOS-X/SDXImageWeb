@@ -1,0 +1,19 @@
+﻿@page "/about"
+
+@inject HttpClient Http
+
+<MudText Typo="Typo.h4" GutterBottom="true">About SDX Imager</MudText>
+
+@((MarkupString)about)
+
+@code {
+
+    string about;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Task.Delay(1);
+        about = await Http.GetStringAsync($"about.html");
+    }
+
+}
