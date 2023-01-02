@@ -37,6 +37,7 @@ namespace SDXImageWeb.Pages
                 //message = "The chosen file is not a too large";
                 //messageType = MessageBarType.Error;
                 //onFileError = true;
+                Snackbar.Add("The file is too large (> 1024kB)", Severity.Error);
                 return;
             }
 
@@ -50,6 +51,10 @@ namespace SDXImageWeb.Pages
                 fileName = file.Name;
                 //currentCount = sdxRom.FileCount;
                 //this.StateHasChanged();
+            }
+            else
+            {
+                Snackbar.Add("Cannot open the file. Is this a valid SDX ROM ?", Severity.Error);
             }
 
             Loading = false;
@@ -74,7 +79,14 @@ namespace SDXImageWeb.Pages
                 if (!result.Cancelled)
                 {
                     var newContent = result.Data.ToString();
-                    sdxRom.SetFileText(configFile, newContent);
+                    if (sdxRom.SetFileText(configFile, newContent))
+                    {
+                        Snackbar.Add($"{configFile.Name} updated", Severity.Success);
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Cannot update {configFile.Name}", Severity.Error);
+                    }
                 }
 
             }
@@ -92,6 +104,7 @@ namespace SDXImageWeb.Pages
                 }
                 catch (Exception ex)
                 {
+                    Snackbar.Add($"Cannot save the image", Severity.Error);
                     Console.Error.WriteLine($"Cannot open SDX.ROM ! {ex.Message}");
                 }
             }
@@ -99,12 +112,25 @@ namespace SDXImageWeb.Pages
 
         private void DeleteFiles()
         {
+            bool error = false;
             foreach (var file in selectedItems)
             {
-                sdxRom.DeleteFile(file);
+                if (!sdxRom.DeleteFile(file))
+                {
+                    Snackbar.Add($"Cannot update {file.Name}", Severity.Error);
+                    error = true;
+                }
             }
 
             sdxRom.UpdateFileList();
+
+            if (!error)
+            {
+                if (selectedItems.Count > 1)
+                    Snackbar.Add($"{selectedItems.Count} files deleted", Severity.Success);
+                else
+                    Snackbar.Add($"{selectedItems.FirstOrDefault()?.Name} deleted", Severity.Success);
+            }
         }
 
         private async void Navigation_LocationChangedAsync(object? sender, LocationChangedEventArgs e)
