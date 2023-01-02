@@ -14,7 +14,7 @@ jobs:
         with:
           dotnet-version: '6.0.x'
       - run: dotnet publish SDXImageWeb.csproj -c Release -o release
-      - run: sed -i ‘s/<base href=”\/” \/>/<base href=”\/SDXImageWeb\/” \/>/g’ release/wwwroot/index.html
+      - run: sed -i 's/<base href=”\/” \/>/<base href=”\/SDXImageWeb\/” \/>/g' release/wwwroot/index.html
       - run: cp release/wwwroot/index.html release/wwwroot/404.html
       - run: touch release/wwwroot/.nojekyll
       - uses: JamesIves/github-pages-deploy-action@v4
