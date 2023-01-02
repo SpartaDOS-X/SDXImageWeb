@@ -1,0 +1,112 @@
+﻿@page "/"
+
+@using System.Runtime.InteropServices
+@inject IDialogService DialogService
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+
+<PageTitle>SDX ROM Image</PageTitle>
+
+
+@if (!sdxRom.Valid && !Loading)
+{
+    <MudText Typo="Typo.h4" GutterBottom="true">SDX Imager</MudText>
+    <MudText Class="mb-8">Select .ROM file to customize</MudText>
+    <MudFileUpload T="IBrowserFile" Accept=".ROM" FilesChanged="OnRomUploaded">
+    <ButtonTemplate>
+        <MudButton HtmlTag="label"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Filled.CloudUpload"
+                   for="@context">
+            Open SDX image
+        </MudButton>
+    </ButtonTemplate>
+    </MudFileUpload>
+}
+
+@if (sdxRom.Valid && !Loading)
+{
+    <MudText Typo="Typo.h4" GutterBottom="true">ROM image</MudText>
+    <MudCard Outlined="true">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">@fileName</MudText>
+            </CardHeaderContent>
+            <CardHeaderActions>
+                <MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Default" @onclick="CloseImage"  />
+            </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText>Type: @sdxRom.Type</MudText>
+            <MudText Typo="Typo.body2">@sdxRom.FileCount files</MudText>
+            <MudText Typo="Typo.body2">@sdxRom.FreeSpace bytes available</MudText>
+            <MudProgressLinear Value="@sdxRom.Occupied" Color="Color.Info" Size="Size.Large" Maximum="@sdxRom.Capacity" Class="my-7">
+                <MudText Typo="Typo.subtitle1" Color="Color.Dark">
+                    <b>@PercentUsed%</b>
+                </MudText>
+            </MudProgressLinear>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Primary" @onclick="SaveRom">Save image</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" @onclick="EditConfig">Edit CONFIG.SYS</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+
+
+@if (Loading)
+{
+    <MudProgressCircular Indeterminate="true"></MudProgressCircular>
+}
+
+@if (sdxRom.Valid)
+{
+
+    @if (sdxRom.Occupied > sdxRom.Capacity)
+    {
+        <MudAlert Severity="Severity.Warning">The files do not fit the image capacity !</MudAlert>
+    }
+    
+
+        <MudFileUpload T="IBrowserFile" FilesChanged="OnFileUploaded">
+            <ButtonTemplate>
+                <MudButton HtmlTag="label"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Filled.Upload"
+                       for="@context">
+                    Add files
+                </MudButton>
+            </ButtonTemplate>
+        </MudFileUpload>
+
+        @if (selectedItems.Count > 0)
+    {
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"@onclick="DeleteFiles">Delete</MudButton>
+    }
+
+    <MudTable Items="sdxRom.Files" Hover="true" SortLabel="Sort By" Elevation="0" RowsPerPage="50" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedItems">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<SDXFile, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Size)">Size (B)</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Date)">Date</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Time)">Time</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Status)">Status</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Size (B)">@context.Size</MudTd>
+            <MudTd DataLabel="Date">@context.Date</MudTd>
+            <MudTd DataLabel="Time">@context.Time</MudTd>
+            <MudTd DataLabel="Status">@context.Status</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{50, 100}" />
+        </PagerContent>
+    </MudTable>
+}
+
+
+
+
