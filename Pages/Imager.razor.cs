@@ -82,6 +82,7 @@ namespace SDXImageWeb.Pages
                     if (sdxRom.SetFileText(configFile, newContent))
                     {
                         Snackbar.Add($"{configFile.Name} updated", Severity.Success);
+                        StateHasChanged();
                     }
                     else
                     {
@@ -140,7 +141,7 @@ namespace SDXImageWeb.Pages
 
         private async Task CloseImage()
         {
-            if (sdxRom.Modified)
+            if (sdxRom.Valid && sdxRom.Modified)
             {
 
                 bool? result = await DialogService.ShowMessageBox(
@@ -155,6 +156,8 @@ namespace SDXImageWeb.Pages
             }
 
             sdxRom.Close();
+
+            Navigation.LocationChanged -= Navigation_LocationChangedAsync;
         }
 
         private async Task OnFileUploaded(IBrowserFile file)

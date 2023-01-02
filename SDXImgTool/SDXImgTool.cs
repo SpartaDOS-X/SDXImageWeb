@@ -69,10 +69,9 @@ namespace SDXImageWeb
             if (res)
             {
                 UpdateFileList();
-            }
-
-            Modified = false;
-            Valid = true;
+                Modified = false;
+                Valid = true;
+            }  
 
             return res;
         }
@@ -248,6 +247,7 @@ namespace SDXImageWeb
             CloseCart(cart);
             Files.Clear();
             Valid = false;
+            Modified = false;
         }
     }
 

@@ -353,7 +353,7 @@ bool CCAR::SaveImage(std::string destfile)
 					{
 						if (limit8k)
 						{
-							std::cerr << "Bank size overflow for " << cfile->name << endl;
+							cout << "Bank size overflow for " << cfile->name << endl;
 							return false;
 						}				
 					}
@@ -397,7 +397,7 @@ bool CCAR::SaveImage(std::string destfile)
 
 			if (bank == -1)				// no more room in the continuous bank area 
 			{
-				std::cerr << "No room for directory ! " << endl;
+				cout << "No room for directory ! " << endl;
 				return false;
 			}
 
@@ -427,7 +427,7 @@ bool CCAR::SaveImage(std::string destfile)
 
 				if (!SaveFileToRom(outfile, cfile, bank, bankofs))
 				{
-					std::cerr << "Cannot save file " << file->name << endl;
+					cout << "Cannot save file " << file->name << endl;
 					return false;
 				}
 
@@ -441,7 +441,7 @@ bool CCAR::SaveImage(std::string destfile)
 		CCAREntry* file = *iter;
 		if (file->bank == 0xFF)
 		{
-			std::cerr << "No room to allocate file " << file->name << endl;
+			cout << "No room to allocate file " << file->name << endl;
 			return false;
 		}
 	}
@@ -554,7 +554,7 @@ bool CCAR::SaveImage(std::string destfile)
 
 	if( !out.good() )
 	{
-		std::cerr << "Cannot save the image !" << endl;
+		cout << "Cannot save the image !" << endl;
 		return false;
 	}
 
@@ -611,7 +611,7 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 
 	if( !inpfile.good() )
 	{
-		std::cerr << "Cannot open the image !" << endl;
+		cout << "Cannot open the image !" << endl;
 		return false;
 	}
 
@@ -650,7 +650,7 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 					SetType(2);						// descending banks if found
 				else
 				{
-					std::cerr << "Bad image format (not SDX) !" << endl;
+					cout << "Bad image format (not SDX) !" << endl;
 					return false;					// not SDX 4.4 cart
 				}
 			}
@@ -681,7 +681,7 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 	if (!inpfile)
 	{
 		inpfile.close();
-		std::cerr << "Cannot read the image !" << endl;
+		cout << "Cannot read the image !" << endl;
 		return false;
 	}
 
@@ -741,7 +741,7 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 	{
 		if (!expert)
 		{
-			std::cerr << "No directory found! (not an SDX image?)" << endl;
+			cout << "No directory found! (not an SDX image?)" << endl;
 			return false;
 		}
 		else
@@ -762,7 +762,7 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 
 	if (dirlen==0 && !expert)
 	{
-		std::cerr << "No files in the image!" << endl;
+		cout << "No files in the image!" << endl;
 		return false;
 	}
 
@@ -784,7 +784,7 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 
 	if (!ReadFileFromRom(memfile, &dirfile))
 	{
-		std::cerr << "Cannot read directory !" << endl;
+		cout << "Cannot read directory !" << endl;
 		return false;
 	}
 
@@ -811,7 +811,7 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 		{	
 			if (!ReadFileFromRom(memfile, cfile))
 			{
-				std::cerr << "Cannot read file " << cfile->name << " from ROM !" << endl;
+				cout << "Cannot read file " << cfile->name << " from ROM !" << endl;
 				return false;
 			}
 
@@ -1081,7 +1081,7 @@ bool CCAR::RemoveFile(std::string filename)
 	{
 		if (!expert)
 		{
-			std::cerr << filename << " cannot be deleted !" << endl;
+			cout << filename << " cannot be deleted !" << endl;
 			return false;
 		}
 
@@ -1279,7 +1279,7 @@ bool CCAR::InsertKernel(std::string kernelfile, int maxbanks)
 
 	if( !insfile.good() )
 	{
-		std::cerr << "Cannot open the kernel image !" << endl;
+		cout << "Cannot open the kernel image !" << endl;
 		return false;
 	}
 
@@ -1297,19 +1297,19 @@ bool CCAR::InsertKernel(std::string kernelfile, int maxbanks)
 
 	if (!kernelCart.OpenRom(kernelfile, false))
 	{
-		std::cerr << "Bad kernel file !" << endl;
+		cout << "Bad kernel file !" << endl;
 		return false;
 	};
 
 	if ((kernelCart.GetBankCapacity(0) < (this->GetBankCapacity(0) - this->GetBankFree(0))) && limit8k)
 	{
-		std::cerr << "Kernel bank 0 does not fit !" << endl;
+		cout << "Kernel bank 0 does not fit !" << endl;
 		return false;
 	}
 
 	if (kernelCart.GetBankCapacity(3) < (this->GetBankCapacity(3) - this->GetBankFree(3)))
 	{
-		std::cerr << "Kernel bank 3 does not fit !" << endl;
+		cout << "Kernel bank 3 does not fit !" << endl;
 		return false;
 	}
 
@@ -1390,7 +1390,7 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 	struct stat st;
 	if ( stat (filename.data(), &st) )
 	{
-		std::cerr << "File not found: " << filename << " !" << endl;
+		cout << "File not found: " << filename << " !" << endl;
 		return NULL;
 	}
 
@@ -1412,7 +1412,7 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 
 	if( !insfile.good() )
 	{
-		std::cerr << "Cannot open the file " << filename << " !" << endl;
+		cout << "Cannot open the file " << filename << " !" << endl;
 		return NULL;
 	}
 
@@ -1448,7 +1448,7 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 
 			if (!IsUserBank(oldfile->bank))
 			{
-				std::cerr << "File " << file->name << " already exists !" << endl;
+				cout << "File " << file->name << " already exists !" << endl;
 				return NULL;
 			}
 
@@ -1564,7 +1564,7 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 	{
 		if (((int)file->length > (0x2000-16)) || ((int)file->length > GetFreeBytes()))
 		{
-			std::cerr << "File " << file->name << " is too large !" << endl;
+			cout << "File " << file->name << " is too large !" << endl;
 			return NULL;
 		}
 	}
@@ -1572,7 +1572,7 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 	{
 		if (((int)file->length > 65535) || ((int)file->length > GetFreeBytes()))
 		{
-			std::cerr << "File " << file->name << " is too large !" << endl;
+			cout << "File " << file->name << " is too large !" << endl;
 			return NULL;
 		}
 	}
@@ -1598,7 +1598,7 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 			
 			if (file->bank == 0xFF)
 			{
-				std::cerr << "No room for the file " << file->name << " in user bank !" << endl;
+				cout << "No room for the file " << file->name << " in user bank !" << endl;
 				return NULL;
 			}
 		}
@@ -1606,14 +1606,14 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 		{			
 			if ((int)file->length > GetFreeBytes())
 			{
-				std::cerr << "No room for the file " << file->name << " !" << endl;
+				cout << "No room for the file " << file->name << " !" << endl;
 				return NULL;
 			}
 		}
 
 		if (GetBankFree(2) < CARENTRYLEN)
 		{
-			std::cerr << "No room for directory entry for file " << filename << " !" << endl;
+			cout << "No room for directory entry for file " << filename << " !" << endl;
 			return NULL;
 		}
 
@@ -1657,7 +1657,7 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 
 				if (bankno == 0xFF)
 				{
-					std::cerr  << "No bank to fit the file " << file->name << " !"  << endl;
+					cout  << "No bank to fit the file " << file->name << " !"  << endl;
 					return NULL;
 				}
 				else
@@ -1690,7 +1690,7 @@ CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned c
 			// This will be done when the directory is constructed 
 			if ((int)file->length > GetFreeBytes() + CARENTRYLEN)
 			{
-				std::cerr << "No room for the file " << file->name << " !" << endl;
+				cout << "No room for the file " << file->name << " !" << endl;
 				return NULL;
 			}
 
@@ -1721,7 +1721,7 @@ bool CCAR::AddFromList(std::string listfile)
 
 	if( !insfile.good() )
 	{		
-		std::cerr << "Cannot open file list from " << listfile << " !" << endl;
+		cout << "Cannot open file list from " << listfile << " !" << endl;
 		return false;
 	}
 
@@ -1837,7 +1837,7 @@ bool CCAR::SaveCSV(std::string filename)
 
 	if( !out.good() )
 	{
-		std::cerr << "Cannot create CSV file !" << endl;
+		cout << "Cannot create CSV file !" << endl;
 		return false;
 	}
 
@@ -1917,7 +1917,7 @@ bool CCAR::ExtractFile(std::string filename, std::string newName)
 
 	if (file == NULL)
 	{
-		std::cerr << "File not found: " << filename << " !" << endl;
+		cout << "File not found: " << filename << " !" << endl;
 		return false;
 	}
 
@@ -1937,7 +1937,7 @@ bool CCAR::ExtractFile(std::string filename, std::string newName)
 
 	if (!out.good())
 	{
-		std::cerr << "Cannot save the file " << filename << " !" << endl;
+		cout << "Cannot save the file " << filename << " !" << endl;
 		return false;
 	}
 

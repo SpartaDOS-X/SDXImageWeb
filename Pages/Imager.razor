@@ -49,8 +49,11 @@
             </MudProgressLinear>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Primary" @onclick="SaveRom">Save image</MudButton>
             <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" @onclick="EditConfig">Edit CONFIG.SYS</MudButton>
+            @if (sdxRom.Modified)
+            {
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Tertiary" @onclick="SaveRom">Save image</MudButton>
+            }
         </MudCardActions>
     </MudCard>
 }
