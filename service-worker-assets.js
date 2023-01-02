@@ -25,7 +25,7 @@
       "url": "images\/sdx-new.gif"
     },
     {
-      "hash": "sha256-1b2w6R11IgylhA+T2uVxg+lYv152guSx3VaATQlBlF4=",
+      "hash": "sha256-QpmcSoIp+7djuuxs2Ugg1oLvh5Q4hXSVWC4qYyNYoVA=",
       "url": "index.html"
     },
     {
@@ -249,5 +249,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "lHmCOlg4"
+  "version": "z\/swh6Xt"
 };
