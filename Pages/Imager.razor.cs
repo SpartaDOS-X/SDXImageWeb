@@ -10,7 +10,8 @@ namespace SDXImageWeb.Pages
     {
         SDXRom sdxRom = new SDXRom();
         string fileName;
-        bool Loading = false;
+
+        bool Loading { get; set; }
 
         private HashSet<SDXFile> selectedItems = new HashSet<SDXFile>();
 
@@ -43,14 +44,18 @@ namespace SDXImageWeb.Pages
                 return;
             }
 
+            var fileData = new byte[file.Size];
+
             Loading = true;
 
+            fileName = file.Name;
+
+            await file.OpenReadStream(1024 * 1024).ReadAsync(fileData);
+            await Task.Delay(1);
+
             //message = null;
-            var fileData = new byte[file.Size];
-            await file.OpenReadStream(1024*1024).ReadAsync(fileData);
             if (sdxRom.OpenRom(fileData))
             {
-                fileName = file.Name;
                 //currentCount = sdxRom.FileCount;
                 //this.StateHasChanged();
                 UpdateImageInfo(false);
