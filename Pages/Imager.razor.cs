@@ -82,6 +82,10 @@ namespace SDXImageWeb.Pages
                 if (!result.Cancelled)
                 {
                     var newContent = result.Data.ToString();
+
+                    if(!newContent.EndsWith((char)0x0a))
+                        newContent += (char)0x0a;
+
                     if (sdxRom.SetFileText(configFile, newContent))
                     {
                         Snackbar.Add($"{configFile.Name} updated", Severity.Success);
