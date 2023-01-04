@@ -131,7 +131,7 @@ else if (Loading)
             <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Status)">Status</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Name">@context.FileName</MudTd>
+            <MudTd DataLabel="Name"><MudHighlighter Text="@context.FileName" HighlightedText="@searchName" /></MudTd>
             <MudTd DataLabel="Size (B)">@context.Size</MudTd>
             <MudTd DataLabel="Date">@context.Date</MudTd>
             <MudTd DataLabel="Time">@context.Time</MudTd>
