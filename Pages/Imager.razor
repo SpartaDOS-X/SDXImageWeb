@@ -59,7 +59,10 @@ else
 
         </MudCardContent>
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" @onclick="EditConfig">Edit CONFIG.SYS</MudButton>
+            @if (sdxRom.HasConfig)
+            {
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" @onclick="EditConfig">Edit CONFIG.SYS</MudButton>
+            }
             @if (sdxRom.Modified)
             {
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Tertiary" @onclick="SaveRom">Save image</MudButton>
@@ -77,8 +80,8 @@ else if (Loading)
         </MudCardHeader>
         <MudCardContent>
             <MudSkeleton Width="30%" Height="42px;" />
-            <MudSkeleton Width="80%" />
-            <MudSkeleton Width="100%" />
+            <MudSkeleton Width="15%" />
+            <MudSkeleton Width="20%" />
         </MudCardContent>
         <MudCardActions>
             <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
@@ -114,16 +117,21 @@ else if (Loading)
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"@onclick="DeleteFiles">Delete</MudButton>
     }
 
-    <MudTable Items="sdxRom.Files" Hover="true" SortLabel="Sort By" Elevation="0" RowsPerPage="50" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedItems">
+    <MudTable Items="sdxRom.Files" Hover="true" SortLabel="Sort By" Elevation="0" RowsPerPage="50" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedItems" Filter="new Func<SDXFile,bool>(FilterName)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Files</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchName" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" DebounceInterval="200"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<SDXFile, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<SDXFile, object>(x=>x.FileName)">Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Size)">Size (B)</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Date)">Date</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Time)">Time</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<SDXFile, object>(x=>x.Status)">Status</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Name">@context.FileName</MudTd>
             <MudTd DataLabel="Size (B)">@context.Size</MudTd>
             <MudTd DataLabel="Date">@context.Date</MudTd>
             <MudTd DataLabel="Time">@context.Time</MudTd>

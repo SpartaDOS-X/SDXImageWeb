@@ -18,6 +18,8 @@ namespace SDXImageWeb.Pages
         public double[] data = { 0, 0 };
         public string[] labels = { "Free", "Occupied" };
 
+        string searchName = string.Empty;
+
         public int PercentUsed
         {
             get
@@ -93,12 +95,12 @@ namespace SDXImageWeb.Pages
 
                     if (sdxRom.SetFileText(configFile, newContent))
                     {
-                        Snackbar.Add($"{configFile.Name} updated", Severity.Success);
+                        Snackbar.Add($"{configFile.FileName} updated", Severity.Success);
                         StateHasChanged();
                     }
                     else
                     {
-                        Snackbar.Add($"Cannot update {configFile.Name}", Severity.Error);
+                        Snackbar.Add($"Cannot update {configFile.FileName}", Severity.Error);
                     }
                 }
 
@@ -130,7 +132,7 @@ namespace SDXImageWeb.Pages
             {
                 if (!sdxRom.DeleteFile(file))
                 {
-                    Snackbar.Add($"Cannot update {file.Name}", Severity.Error);
+                    Snackbar.Add($"Cannot update {file.FileName}", Severity.Error);
                     error = true;
                 }
             }
@@ -142,7 +144,7 @@ namespace SDXImageWeb.Pages
                 if (selectedItems.Count > 1)
                     Snackbar.Add($"{selectedItems.Count} files deleted", Severity.Success);
                 else
-                    Snackbar.Add($"{selectedItems.FirstOrDefault()?.Name} deleted", Severity.Success);
+                    Snackbar.Add($"{selectedItems.FirstOrDefault()?.FileName} deleted", Severity.Success);
             }
 
         }
@@ -184,6 +186,15 @@ namespace SDXImageWeb.Pages
         private async Task OnFileUploaded(IBrowserFile file)
         {
             UpdateImageInfo();
+        }
+
+        private bool FilterName(SDXFile element)
+        {
+            if (string.IsNullOrWhiteSpace(searchName))
+                return true;
+            if (element.Name.Contains(searchName, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
         }
 
     }

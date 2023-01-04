@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SDXImageWeb
 {
@@ -62,6 +63,8 @@ namespace SDXImageWeb
         public bool Modified { get; private set; } = false;
 
         public bool Valid { get; private set; } = false;
+
+        public bool HasConfig { get { return files.Any(f => f.Name.Equals("CONFIG  SYS")); } }
 
         public bool OpenRom(byte[] data)
         {
@@ -274,6 +277,20 @@ namespace SDXImageWeb
             get
             {
                 return $"{CarEntry.time0:D2}:{CarEntry.time1:D2}:{CarEntry.time2:D2}";
+            }
+        }
+
+        public string FileName
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append(Name.Substring(0,8).Trim());
+                sb.Append('.');
+                sb.Append(Name.Substring(8,3).Trim());
+
+                return sb.ToString();
             }
         }
 
