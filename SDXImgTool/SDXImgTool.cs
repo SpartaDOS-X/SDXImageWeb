@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.JSInterop;
+using System;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -66,9 +68,24 @@ namespace SDXImageWeb
 
         public bool HasConfig { get { return files.Any(f => f.Name.Equals("CONFIG  SYS")); } }
 
+        internal int signatureLength = 0;
+        internal byte[] signature;
+
+
         public bool OpenRom(byte[] data)
         {
-            bool res = OpenRom(cart, data, data.Length);
+            var carSignature = System.Text.Encoding.Default.GetString(data,0,4);
+
+            signatureLength = 0;
+            if (carSignature.Equals("CART"))
+            {
+                signatureLength = 16;                    
+            }
+
+            signature = new byte[signatureLength];
+            Array.Copy(data, signature, signatureLength);
+
+            bool res = OpenRom(cart, data.Skip(signatureLength).ToArray(), data.Length - signatureLength);
             if (res)
             {
                 UpdateFileList();
@@ -235,7 +252,32 @@ namespace SDXImageWeb
 
         public bool SaveImage(string filename)
         {
-            return SaveImage(cart, filename);
+            if (signature.Length == 0)
+            {
+                return SaveImage(cart, filename);
+            }
+            else
+            {
+                if (SaveImage(cart, "sdx.tmp"))
+                {
+                    try
+                    {
+                        var imageStream = new FileStream("sdx.tmp", FileMode.Open, FileAccess.Read);
+                        var fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write);
+                        fileStream.Write(signature, 0, signature.Length);
+                        imageStream.CopyTo(fileStream);
+                        return true;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Cannot create .CAR output !");
+                    }
+
+                }
+            }
+
+            return false;
+
         }
 
         internal bool DeleteFile(SDXFile file)

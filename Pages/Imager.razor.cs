@@ -20,6 +20,8 @@ namespace SDXImageWeb.Pages
 
         string searchName = string.Empty;
 
+        bool IsSaved { get; set; }
+
         public int PercentUsed
         {
             get
@@ -61,6 +63,8 @@ namespace SDXImageWeb.Pages
                 //currentCount = sdxRom.FileCount;
                 //this.StateHasChanged();
                 UpdateImageInfo(false);
+
+                IsSaved = false;
             }
             else
             {
@@ -116,6 +120,8 @@ namespace SDXImageWeb.Pages
                     var fileStream = new FileStream("SDX1.ROM", FileMode.Open, FileAccess.Read);
                     using var streamRef = new DotNetStreamReference(stream: fileStream);
                     await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+                    IsSaved = true;
+
                 }
                 catch (Exception ex)
                 {
@@ -164,7 +170,7 @@ namespace SDXImageWeb.Pages
 
         private async Task CloseImage()
         {
-            if (sdxRom.Valid && sdxRom.Modified)
+            if (sdxRom.Valid && sdxRom.Modified && !IsSaved)
             {
 
                 bool? result = await DialogService.ShowMessageBox(
@@ -183,7 +189,7 @@ namespace SDXImageWeb.Pages
             Navigation.LocationChanged -= Navigation_LocationChangedAsync;
         }
 
-        private async Task OnFileUploaded(IBrowserFile file)
+        private void OnFileUploaded(IBrowserFile file)
         {
             UpdateImageInfo();
         }
