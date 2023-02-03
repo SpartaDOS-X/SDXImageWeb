@@ -13,13 +13,13 @@
 @if (!sdxRom.Valid && !Loading)
 {
     <MudText Typo="Typo.h4" GutterBottom="true">SDX Imager</MudText>
-    <MudText Class="mb-8">Select .ROM file to customize</MudText>
+    <MudText Class="mb-8">Select .ROM or .CAR file to customize</MudText>
     <MudFileUpload T="IBrowserFile" Accept=".ROM,.CAR" FilesChanged="OnRomUploaded">
     <ButtonTemplate>
         <MudButton HtmlTag="label"
                    Variant="Variant.Filled"
                    Color="Color.Primary"
-                   StartIcon="@Icons.Filled.CloudUpload"
+                   StartIcon="@Icons.Material.Filled.CloudUpload"
                    for="@context">
             Open SDX image
         </MudButton>
@@ -117,7 +117,8 @@ else if (Loading)
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"@onclick="DeleteFiles">Delete</MudButton>
     }
 
-    <MudTable Items="sdxRom.Files" Hover="true" SortLabel="Sort By" Elevation="0" RowsPerPage="50" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedItems" Filter="new Func<SDXFile,bool>(FilterName)">
+    <MudTable Items="sdxRom.Files" Hover="true" SortLabel="Sort By" Elevation="0" RowsPerPage="50" Dense="true" MultiSelection="true"
+          @bind-SelectedItems="selectedItems" Filter="new Func<SDXFile,bool>(FilterName)" @ref="mudTable">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Files</MudText>
             <MudSpacer />

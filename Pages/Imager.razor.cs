@@ -22,6 +22,8 @@ namespace SDXImageWeb.Pages
 
         bool IsSaved { get; set; }
 
+        private MudTable<SDXFile>? mudTable;
+
         public int PercentUsed
         {
             get
