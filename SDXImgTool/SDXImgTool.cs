@@ -314,6 +314,14 @@ namespace SDXImageWeb
             }
         }
 
+        public string DateYMD
+        {
+            get
+            {
+                return $"{CarEntry.date2:D2}-{CarEntry.date1:D2}-{CarEntry.date0:D2}";
+            }
+        }
+
         public string Time
         {
             get
