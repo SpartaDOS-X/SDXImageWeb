@@ -36,6 +36,7 @@ extern "C" {
 	bool GetCarEntry(CCAR* cart, const char* file, CARFileInfo* info);
 	int GetType(CCAR* cart);
 	void CloseCart(CCAR* cart);
+	bool InsertFile(CCAR* cart, const char* filename, unsigned char data[], int length);
 }
 
 CCAR* CreateCart()
@@ -215,4 +216,16 @@ int GetType(CCAR* cart)
 	}
 
 	return 0;
+}
+
+bool InsertFile(CCAR* cart, const char* filename, unsigned char data[], int length)
+{
+	if (cart == NULL)
+		return false;
+
+	std::ofstream file(filename, std::ios::binary);
+	file.write((const char*)data, length);
+	file.close();
+
+	return (cart->InsertFile(filename) != NULL);
 }

@@ -51,6 +51,8 @@ namespace SDXImageWeb
         [DllImport("SDXImgTool")]
         static extern int GetType(IntPtr cart);
 
+        [DllImport("SDXImgTool")]
+        static extern bool InsertFile(IntPtr cart, string filename, byte[] contents, int length);
 
         IntPtr cart = IntPtr.Zero;
 
@@ -285,6 +287,17 @@ namespace SDXImageWeb
             Modified = true;
 
             return RemoveFile(cart, file.Name);
+        }
+
+
+        internal bool InsertFile(string filename, byte[] data)
+        {
+            bool res = InsertFile(cart, filename, data, data.Length);
+
+            if (res)
+                Modified = true;
+
+            return res;
         }
 
         public void Close()

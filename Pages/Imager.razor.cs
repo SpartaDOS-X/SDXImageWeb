@@ -191,9 +191,40 @@ namespace SDXImageWeb.Pages
             Navigation.LocationChanged -= Navigation_LocationChangedAsync;
         }
 
-        private void OnFileUploaded(IBrowserFile file)
+        private async void OnFileUploaded(IReadOnlyList<IBrowserFile> files)
         {
-            UpdateImageInfo();
+            foreach (var file in files)
+            {
+                if (file.Size > sdxRom.FreeSpace)
+                {
+                    //message = "The chosen file is not a too large";
+                    //messageType = MessageBarType.Error;
+                    //onFileError = true;
+                    Snackbar.Add("The file is too large.", Severity.Error);
+                    return;
+                }
+
+                var fileData = new byte[file.Size];
+
+                await file.OpenReadStream(1024 * 1024).ReadAsync(fileData);
+                await Task.Delay(1);
+
+                //message = null;
+                if (sdxRom.InsertFile(file.Name, fileData))
+                {
+                    IsSaved = false;
+
+                }
+                else
+                {
+                    Snackbar.Add("Cannot add the file.", Severity.Error);
+                }
+            }
+
+            UpdateImageInfo(true);
+            StateHasChanged();
+
+            return;
         }
 
         private bool FilterName(SDXFile element)

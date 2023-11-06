@@ -1376,6 +1376,7 @@ bool CCAR::InsertKernel(std::string kernelfile, int maxbanks)
 
 CCARFile* CCAR::InsertFile(std::string filename, std::string newName, unsigned char status, bool forceUpdate)
 {
+
 	CCARFile* file = new CCARFile();
 
 	file->status = status;
