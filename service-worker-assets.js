@@ -1,6 +1,10 @@
 ﻿self.assetsManifest = {
   "assets": [
     {
+      "hash": "sha256-MyI8Gsd8JzgPJFwBw7ElfvRhO1Ti8tErfyqELzCsBN0=",
+      "url": "Pages\/Imager.razor.js"
+    },
+    {
       "hash": "sha256-zeAQuF+ziZnSTkIe9m7yrQJumw8JJEC7XsUaHZbL0h0=",
       "url": "about.html"
     },
@@ -29,7 +33,7 @@
       "url": "images\/sdx-new.gif"
     },
     {
-      "hash": "sha256-eCCSh1CDf+2i9+1RbD\/fSApAvbLJmSqU24fzvZx02Fo=",
+      "hash": "sha256-D8r9L\/iTwrjtWF7cpW0BrZG14aQha1YJZhYgqpOEiec=",
       "url": "index.html"
     },
     {
@@ -41,7 +45,7 @@
       "url": "sample-data\/weather.json"
     },
     {
-      "hash": "sha256-nAPFPO8PwcCQUg5ONixvCKWsodwD899kHViRZsHoqpA=",
+      "hash": "sha256-jwa+q6UbbrKG\/8cFFxIAY20GdjwO9U4EK8P0LnCJhEI=",
       "url": "scripts\/savefile.js"
     },
     {
@@ -69,7 +73,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-btPqaCQAPSUTaFri2YWlELPB6Lx7CCkMGDSUoJ4rvFw=",
+      "hash": "sha256-DV3RlvjFAwCBHUjBaSQNIS6GbXtQbgf+XdLWLuzXZK8=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -133,7 +137,7 @@
       "url": "_framework\/Microsoft.Extensions.Primitives.dll"
     },
     {
-      "hash": "sha256-GTtGyZCdS3Q1FZuOS3a9KngQu6QLmgG\/2OxT3r2427s=",
+      "hash": "sha256-Zj\/DkdqtZE09DVs0U0LkPuj96Xe2kCIwu\/vg6VtLAOE=",
       "url": "_framework\/Microsoft.JSInterop.dll"
     },
     {
@@ -145,7 +149,7 @@
       "url": "_framework\/MudBlazor.dll"
     },
     {
-      "hash": "sha256-JsQoDSfzXSmIVfpcWVeh\/QRC9scVVDHDvuHxU52hYKw=",
+      "hash": "sha256-80wCw8ULRkSZYhZnPMJOOXV18DEyBNNc2vJqe5lhTm0=",
       "url": "_framework\/SDXImageWeb.dll"
     },
     {
@@ -261,5 +265,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "qqPc2yyT"
+  "version": "WoZhvbGo"
 };

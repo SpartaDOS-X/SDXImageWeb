@@ -1,10 +1,13 @@
-// see: https://web.dev/patterns/files/save-a-file
+function FileSaveAs(filename, contents) {
+    var link = document.createElement('a');
+    link.download = filename;
+    link.href = "data:application/octet-stream;base64," + contents;
+    document.body.appendChild(link); // Needed for Firefox
+    link.click();
+    document.body.removeChild(link);
+}
 
-export const saveFileContents = async (contentStreamReference, suggestedName) => {
-
-    const arrayBuffer = await contentStreamReference.arrayBuffer();
-    const blob = new Blob([arrayBuffer]);
-
+const window.saveFileContents = async (blob, suggestedName) => {
     // Feature detection. The API needs to be supported
     // and the app not run in an iframe.
     const supportsFileSystemAccess =
@@ -16,7 +19,6 @@ export const saveFileContents = async (contentStreamReference, suggestedName) =>
                 return false;
             }
         })();
-
     // If the File System Access API is supported…
     if (supportsFileSystemAccess) {
         try {
@@ -37,23 +39,21 @@ export const saveFileContents = async (contentStreamReference, suggestedName) =>
             }
         }
     }
-    else {
-        // Fallback if the File System Access API is not supported…
-        // Create the blob URL.
-        const blobURL = URL.createObjectURL(blob);
-        // Create the `<a download>` element and append it invisibly.
-        const a = document.createElement('a');
-        a.href = blobURL;
-        a.download = suggestedName;
-        a.style.display = 'none';
-        document.body.append(a);
-        // Programmatically click the element.
-        a.click();
-        // Revoke the blob URL and remove the element.
-        setTimeout(() => {
-            URL.revokeObjectURL(blobURL);
-            a.remove();
-        }, 1000);
-    }
+    // Fallback if the File System Access API is not supported…
+    // Create the blob URL.
+    const blobURL = URL.createObjectURL(blob);
+    // Create the `<a download>` element and append it invisibly.
+    const a = document.createElement('a');
+    a.href = blobURL;
+    a.download = suggestedName;
+    a.style.display = 'none';
+    document.body.append(a);
+    // Programmatically click the element.
+    a.click();
+    // Revoke the blob URL and remove the element.
+    setTimeout(() => {
+        URL.revokeObjectURL(blobURL);
+        a.remove();
+    }, 1000);
 };
 
