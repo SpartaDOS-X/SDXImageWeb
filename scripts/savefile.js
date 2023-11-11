@@ -5,8 +5,7 @@ export const saveFileContents = async (contentStreamReference, suggestedName) =>
     const arrayBuffer = await contentStreamReference.arrayBuffer();
     const blob = new Blob([arrayBuffer]);
 
-    // Feature detection. The API needs to be supported
-    // and the app not run in an iframe.
+    // The API needs to be supported and the app not run in an iframe.
     const supportsFileSystemAccess =
         'showSaveFilePicker' in window &&
         (() => {
@@ -38,18 +37,12 @@ export const saveFileContents = async (contentStreamReference, suggestedName) =>
         }
     }
     else {
-        // Fallback if the File System Access API is not supported…
-        // Create the blob URL.
+        // Fallback if the File System Access API is not supported (e.g. Firefox)
         const blobURL = URL.createObjectURL(blob);
-        // Create the `<a download>` element and append it invisibly.
         const a = document.createElement('a');
-        a.href = blobURL;
-        a.download = suggestedName;
-        a.style.display = 'none';
+        a.src = blobURL;
         document.body.append(a);
-        // Programmatically click the element.
         a.click();
-        // Revoke the blob URL and remove the element.
         setTimeout(() => {
             URL.revokeObjectURL(blobURL);
             a.remove();

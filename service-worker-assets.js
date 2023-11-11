@@ -45,7 +45,7 @@
       "url": "sample-data\/weather.json"
     },
     {
-      "hash": "sha256-jwa+q6UbbrKG\/8cFFxIAY20GdjwO9U4EK8P0LnCJhEI=",
+      "hash": "sha256-KvDY+uf+CnYFA0cF\/+wIXpRT8R89F\/3HrRN+\/dNMBUw=",
       "url": "scripts\/savefile.js"
     },
     {
@@ -265,5 +265,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "WoZhvbGo"
+  "version": "kkg508sm"
 };
