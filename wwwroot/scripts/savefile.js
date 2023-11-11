@@ -5,7 +5,8 @@ export const saveFileContents = async (contentStreamReference, suggestedName) =>
     const arrayBuffer = await contentStreamReference.arrayBuffer();
     const blob = new Blob([arrayBuffer]);
 
-    // The API needs to be supported and the app not run in an iframe.
+    // Feature detection. The API needs to be supported
+    // and the app not run in an iframe.
     const supportsFileSystemAccess =
         'showSaveFilePicker' in window &&
         (() => {
@@ -37,16 +38,16 @@ export const saveFileContents = async (contentStreamReference, suggestedName) =>
         }
     }
     else {
-        // Fallback if the File System Access API is not supported (e.g. Firefox)
-        const blobURL = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.src = blobURL;
-        document.body.append(a);
-        a.click();
-        setTimeout(() => {
-            URL.revokeObjectURL(blobURL);
-            a.remove();
-        }, 1000);
+
+        const url = URL.createObjectURL(blob);
+        const anchorElement = document.createElement('a');
+        anchorElement.href = url;
+        anchorElement.download = suggestedName ?? '';
+        anchorElement.style.display = 'none';
+        document.body.append(anchorElement);
+        anchorElement.click();
+        anchorElement.remove();
+        URL.revokeObjectURL(url);
     }
 };
 
