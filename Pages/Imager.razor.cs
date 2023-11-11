@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using MudBlazor;
 
@@ -36,6 +37,23 @@ namespace SDXImageWeb.Pages
         protected override void OnInitialized()
         {
             Navigation.LocationChanged += Navigation_LocationChangedAsync;
+        }
+
+
+        private IJSObjectReference JsModule { get; set; }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                try
+                {
+                    JsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./scripts/savefile.js");
+                }
+                catch (Exception ex)
+                {
+                    Snackbar.Add($"Failed to load a module. Error: {ex}", Severity.Error);
+                }
+            }
         }
 
         private async Task OnRomUploaded(IBrowserFile file)
@@ -121,7 +139,8 @@ namespace SDXImageWeb.Pages
                 {
                     var fileStream = new FileStream("SDX1.ROM", FileMode.Open, FileAccess.Read);
                     using var streamRef = new DotNetStreamReference(stream: fileStream);
-                    await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+                    //await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);                  
+                    await JsModule.InvokeVoidAsync("saveFileContents", streamRef, fileName);
                     IsSaved = true;
 
                 }
