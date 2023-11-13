@@ -45,7 +45,7 @@
       "url": "sample-data\/weather.json"
     },
     {
-      "hash": "sha256-+DYYbHuzlUsm99RYlNjOE\/eZTswT1sq1cCJpbyjWBoY=",
+      "hash": "sha256-n6uXdjdV4KiSGR61PbEEMiK6bbAFqwm6B4TtlL4rjZc=",
       "url": "scripts\/savefile.js"
     },
     {
@@ -73,7 +73,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-DV3RlvjFAwCBHUjBaSQNIS6GbXtQbgf+XdLWLuzXZK8=",
+      "hash": "sha256-FSwRKL7lGpWr\/etHgxFw1x3e2s68a1qS6o5\/2dDBD8w=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -137,7 +137,7 @@
       "url": "_framework\/Microsoft.Extensions.Primitives.dll"
     },
     {
-      "hash": "sha256-Zj\/DkdqtZE09DVs0U0LkPuj96Xe2kCIwu\/vg6VtLAOE=",
+      "hash": "sha256-PnMU6+Rv3La2Br2e3R95q5IwUrpv4Da5UV1q+0LWUgA=",
       "url": "_framework\/Microsoft.JSInterop.dll"
     },
     {
@@ -145,11 +145,11 @@
       "url": "_framework\/Microsoft.JSInterop.WebAssembly.dll"
     },
     {
-      "hash": "sha256-tqTe+LRlQaNQ2DANc2wYjgWXRp3yHoNcIpiB++YBbAA=",
+      "hash": "sha256-rJB+jLiQlFrxDuAZPFSxS5scEokxMi3xcb9EprYwV3Q=",
       "url": "_framework\/MudBlazor.dll"
     },
     {
-      "hash": "sha256-80wCw8ULRkSZYhZnPMJOOXV18DEyBNNc2vJqe5lhTm0=",
+      "hash": "sha256-a\/aFkx8OFqtMD7WTeKlwVKHqvj\/jnNRxgnKI9vm1pEU=",
       "url": "_framework\/SDXImageWeb.dll"
     },
     {
@@ -265,5 +265,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "C2ZVM\/gs"
+  "version": "QWT2\/TDD"
 };
