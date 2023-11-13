@@ -1,7 +1,9 @@
 ﻿<MudDialog>
     <DialogContent>
         <div class="d-flex flex-column py-1">
-            <MudLink Href="@Url" download="@UrlText">@UrlText</MudLink>
+            <MudTooltip Text="Right click to save to a custom location">
+                <MudLink Href="@Url" download="@UrlText" Underline="Underline.Always">@UrlText</MudLink>
+            </MudTooltip>
         </div>
     </DialogContent>
     <DialogActions>
