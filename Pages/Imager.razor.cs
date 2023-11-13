@@ -1,14 +1,17 @@
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using MudBlazor;
-
+using System.Reflection.Metadata;
+using System;
 
 namespace SDXImageWeb.Pages
 {
     public partial class Imager
     {
+
         SDXRom sdxRom = new SDXRom();
         string fileName;
 
@@ -34,11 +37,23 @@ namespace SDXImageWeb.Pages
             }
         }
 
+        [Parameter]
+        public bool? Download { get; set; }
+
         protected override void OnInitialized()
         {
             Navigation.LocationChanged += Navigation_LocationChangedAsync;
         }
 
+        protected override void OnParametersSet()
+        {
+            if (Download ?? false)
+            {
+                SaveRom();
+            }
+
+            Download = false;
+        }
 
         private IJSObjectReference JsModule { get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -110,7 +125,7 @@ namespace SDXImageWeb.Pages
 
                 var result = await dialog.Result;
 
-                if (!result.Cancelled)
+                if (!result.Canceled)
                 {
                     var newContent = result.Data.ToString();
 
@@ -140,7 +155,30 @@ namespace SDXImageWeb.Pages
                     var fileStream = new FileStream("SDX1.ROM", FileMode.Open, FileAccess.Read);
                     using var streamRef = new DotNetStreamReference(stream: fileStream);
                     //await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);                  
-                    await JsModule.InvokeVoidAsync("saveFileContents", streamRef, fileName);
+
+                    var saveDialogNeeded = ! (await JsModule.InvokeAsync<bool>("supportsFileSystemAccess", streamRef, fileName));
+                    if (!saveDialogNeeded)
+                        await JsModule.InvokeVoidAsync("saveFileContents", streamRef, fileName);
+                    else
+                    {
+                        var url = await JsModule.InvokeAsync<string>("createDownloadLink", streamRef);
+
+                        var parameters = new DialogParameters();
+                        parameters.Add("UrlText", fileName);
+                        parameters.Add("Url", url);
+                        parameters.Add("Title", "Save image ?");
+
+                        DialogOptions options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+                        var dialog = await DialogService.ShowAsync<SDXImageWeb.Pages.Components.SaveDialog>("Save image", parameters, options);
+
+                        var result = await dialog.Result;
+
+                        if (!result.Canceled)
+                        {
+                            await JsModule.InvokeVoidAsync("clickDownloadAnchor", url, fileName);
+                        }
+                    }
                     IsSaved = true;
 
                 }

@@ -1,0 +1,11 @@
+﻿<MudDialog>
+    <DialogContent>
+        <div class="d-flex flex-column py-1">
+            <MudLink Href="@Url" download="@UrlText">@UrlText</MudLink>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Save">Save</MudButton>
+    </DialogActions>
+</MudDialog>

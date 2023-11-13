@@ -1,24 +1,18 @@
 // see: https://web.dev/patterns/files/save-a-file
 
+// Feature detection. The API needs to be supported and the app not run in an iframe.
+export const supportsFileSystemAccess = () => {
+    return 'showSaveFilePicker' in window && window.self === window.top;
+};
+
+
 export const saveFileContents = async (contentStreamReference, suggestedName) => {
 
     const arrayBuffer = await contentStreamReference.arrayBuffer();
     const blob = new Blob([arrayBuffer]);
 
-    // Feature detection. The API needs to be supported
-    // and the app not run in an iframe.
-    const supportsFileSystemAccess =
-        'showSaveFilePicker' in window &&
-        (() => {
-            try {
-                return window.self === window.top;
-            } catch {
-                return false;
-            }
-        })();
-
     // If the File System Access API is supported…
-    if (supportsFileSystemAccess) {
+    if (supportsFileSystemAccess()) {
         try {
             // Show the file save dialog.
             const handle = await showSaveFilePicker({
@@ -40,14 +34,24 @@ export const saveFileContents = async (contentStreamReference, suggestedName) =>
     else {
 
         const url = URL.createObjectURL(blob);
-        const anchorElement = document.createElement('a');
-        anchorElement.href = url;
-        anchorElement.download = suggestedName ?? '';
-        anchorElement.style.display = 'none';
-        document.body.append(anchorElement);
-        anchorElement.click();
-        anchorElement.remove();
+        clickDownloadAnchor(url);
         URL.revokeObjectURL(url);
     }
 };
 
+export const createDownloadLink = async (contentStreamReference) => {
+    const arrayBuffer = await contentStreamReference.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: 'octet/stream' });
+
+    return URL.createObjectURL(blob);
+};
+
+export const clickDownloadAnchor = async (url, suggestedName) => {
+    const anchorElement = document.createElement('a');
+    anchorElement.href = url;
+    anchorElement.download = suggestedName ?? '';
+    anchorElement.style.display = 'none';
+    document.body.append(anchorElement);
+    anchorElement.click();
+    anchorElement.remove();
+};
