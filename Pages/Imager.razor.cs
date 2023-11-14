@@ -117,7 +117,7 @@ namespace SDXImageWeb.Pages
                 var content = sdxRom.GetFileText(configFile);
                 var parameters = new DialogParameters();
                 parameters.Add("ContentText", content);
-                parameters.Add("Title", configFile.Name);
+                parameters.Add("Title", configFile.FileName);
 
                 DialogOptions options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
 

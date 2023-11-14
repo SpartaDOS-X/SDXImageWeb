@@ -343,6 +343,9 @@ namespace SDXImageWeb
             }
         }
 
+        /// <summary>
+        /// DOS file name (with dot between name and extension)
+        /// </summary>
         public string FileName
         {
             get
