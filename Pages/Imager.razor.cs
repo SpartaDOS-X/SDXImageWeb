@@ -154,9 +154,12 @@ namespace SDXImageWeb.Pages
                 {
                     var fileStream = new FileStream("SDX1.ROM", FileMode.Open, FileAccess.Read);
                     using var streamRef = new DotNetStreamReference(stream: fileStream);
-                    //await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);                  
 
-                    var saveDialogNeeded = ! (await JsModule.InvokeAsync<bool>("supportsFileSystemAccess", streamRef, fileName));
+                    //await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+
+                    //fileStream.Position = 0;
+
+                    var saveDialogNeeded = ! (await JsModule.InvokeAsync<bool>("supportsFileSystemAccess"));
                     if (!saveDialogNeeded)
                         await JsModule.InvokeVoidAsync("saveFileContents", streamRef, fileName);
                     else
@@ -179,6 +182,7 @@ namespace SDXImageWeb.Pages
                             await JsModule.InvokeVoidAsync("clickDownloadAnchor", url, fileName);
                         }
                     }
+
                     IsSaved = true;
 
                 }

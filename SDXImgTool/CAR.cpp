@@ -471,7 +471,7 @@ bool CCAR::SaveImage(std::string destfile)
 
 	// nag³ówka
 	CCAREntry dirhead;
-	dirhead.status = 0x08;
+	dirhead.status = 0x28;
 	dirhead.start = 0x4000;
 	dirhead.bank = 2;
 	dirhead.start_img = 0x4000;
@@ -483,6 +483,13 @@ bool CCAR::SaveImage(std::string destfile)
 	CSDXEntry sdxentry;
 
 	dirhead.GetSDXEntry(sdxentry);
+
+	sdxentry.start = 0;		// MAIN has no parent
+
+	if (verbose)
+	{
+		printf("MAIN header: %x %x \n", sdxentry.status, sdxentry.start);
+	}
 
 	memcpy(dirfile.contents, &sdxentry, CARENTRYLEN);
 
@@ -737,7 +744,7 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 	memfile.Seek(GetDirectoryOfs());
 	memfile.Read((BYTE*)&dirbuf, CARENTRYLEN);  // read directory header
 
-	if (((dirbuf.status != 0x08) || (strncmp("MAIN", (const char*)dirbuf.name ,4))))
+	if (((strncmp("MAIN", (const char*)dirbuf.name ,4))))
 	{
 		if (!expert)
 		{
