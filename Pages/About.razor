@@ -6,14 +6,20 @@
 
 @((MarkupString)about)
 
-@code {
+<MudText Typo="Typo.subtitle1">Version: @version</MudText>
+
+    @code {
 
     string about;
+    string version;
+
+    protected static Version AppVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version ?? throw new NullReferenceException();
 
     protected async override Task OnInitializedAsync()
     {
         await Task.Delay(1);
         about = await Http.GetStringAsync($"about.html");
+        version = AppVersion.ToString();
     }
 
 }
