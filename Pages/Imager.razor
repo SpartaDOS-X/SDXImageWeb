@@ -101,12 +101,12 @@ else if (Loading)
     }
 
 
-    <MudFileUpload T="IReadOnlyList<IBrowserFile>" Context="fileInput" FilesChanged="OnFileUploaded">
+    <MudFileUpload T="IReadOnlyList<IBrowserFile>" Context="fileInput" FilesChanged="OnFileUploaded" MaximumFileCount="128">
             <ButtonTemplate>
                 <MudButton HtmlTag="label"
                        Variant="Variant.Filled"
                        Color="Color.Primary"
-                       StartIcon="@Icons.Filled.Upload"
+                       StartIcon="@Icons.Material.Filled.Upload"
                        for="@fileInput">
                     Add files
                 </MudButton>

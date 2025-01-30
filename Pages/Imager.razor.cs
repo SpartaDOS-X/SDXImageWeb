@@ -13,7 +13,7 @@ namespace SDXImageWeb.Pages
     {
 
         SDXRom sdxRom = new SDXRom();
-        string fileName;
+        string fileName = string.Empty;
 
         bool Loading { get; set; }
 
@@ -45,17 +45,18 @@ namespace SDXImageWeb.Pages
             Navigation.LocationChanged += Navigation_LocationChangedAsync;
         }
 
-        protected override void OnParametersSet()
+        protected override async void OnParametersSet()
         {
             if (Download ?? false)
             {
-                SaveRom();
+                await SaveRom();
             }
 
             Download = false;
         }
 
         private IJSObjectReference JsModule { get; set; }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -129,7 +130,7 @@ namespace SDXImageWeb.Pages
                 {
                     var newContent = result.Data.ToString();
 
-                    if(!newContent.EndsWith((char)0x0a))
+                    if(string.IsNullOrEmpty(newContent) || !newContent.EndsWith((char)0x0a))
                         newContent += (char)0x0a;
 
                     if (sdxRom.SetFileText(configFile, newContent))
