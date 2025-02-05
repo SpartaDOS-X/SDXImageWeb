@@ -1,5 +1,6 @@
 ﻿using Microsoft.JSInterop;
 using System;
+using System.Buffers.Binary;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -252,6 +253,17 @@ namespace SDXImageWeb
             }      
         }
 
+        public UInt32 GetCheckSum(Stream dataStream)
+        {
+            UInt32 checksum = 0;
+            int b;
+            while ((b = dataStream.ReadByte()) != -1)
+            {
+                checksum += (byte)b;
+            }
+            return checksum;
+        }
+
         public bool SaveImage(string filename)
         {
             if (signature.Length == 0)
@@ -266,6 +278,11 @@ namespace SDXImageWeb
                     {
                         var imageStream = new FileStream("sdx.tmp", FileMode.Open, FileAccess.Read);
                         var fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write);
+                        UInt32 checksum = GetCheckSum(imageStream);
+                        checksum = BinaryPrimitives.ReverseEndianness(checksum);
+                        byte[] checksumBytes = BitConverter.GetBytes(checksum);
+                        Array.Copy(checksumBytes, 0, signature, 8, checksumBytes.Length);
+                        imageStream.Position = 0;
                         fileStream.Write(signature, 0, signature.Length);
                         imageStream.CopyTo(fileStream);
                         return true;
