@@ -28,6 +28,8 @@ namespace SDXImageWeb.Pages
 
         private MudTable<SDXFile>? mudTable;
 
+        private int MAX_IMAGE_SIZE = (1024 * 1024) + 16;
+
         public int PercentUsed
         {
             get
@@ -75,7 +77,7 @@ namespace SDXImageWeb.Pages
         private async Task OnRomUploaded(IBrowserFile file)
         {
 
-            if (file.Size > 1024 * 1024)
+            if (file.Size > MAX_IMAGE_SIZE)
             {
                 //message = "The chosen file is not a too large";
                 //messageType = MessageBarType.Error;
@@ -90,7 +92,7 @@ namespace SDXImageWeb.Pages
 
             fileName = file.Name;
 
-            await file.OpenReadStream(1024 * 1024).ReadAsync(fileData);
+            await file.OpenReadStream(MAX_IMAGE_SIZE).ReadAsync(fileData);
             await Task.Delay(1);
 
             //message = null;
