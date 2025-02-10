@@ -37,6 +37,7 @@ extern "C" {
 	int GetType(CCAR* cart);
 	void CloseCart(CCAR* cart);
 	bool InsertFile(CCAR* cart, const char* filename, unsigned char data[], int length);
+	int GetHwIdent(CCAR* cart);
 }
 
 CCAR* CreateCart()
@@ -228,4 +229,16 @@ bool InsertFile(CCAR* cart, const char* filename, unsigned char data[], int leng
 	file.close();
 
 	return (cart->InsertFile(filename) != NULL);
+}
+
+int GetHwIdent(CCAR* cart)
+{
+	if (cart != NULL)
+	{
+		SdxVersionInfo* info;
+		if ((info = cart->GetSdxVersionInfo()) != NULL)
+			return info->hwid;
+	}
+
+	return -1;
 }

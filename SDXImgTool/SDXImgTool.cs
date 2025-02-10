@@ -55,6 +55,9 @@ namespace SDXImageWeb
         [DllImport("SDXImgTool")]
         static extern bool InsertFile(IntPtr cart, string filename, byte[] contents, int length);
 
+        [DllImport("SDXImgTool")]
+        static extern int GetHwIdent(IntPtr cart);
+
         IntPtr cart = IntPtr.Zero;
 
         List<SDXFile> files = new List<SDXFile>();
@@ -72,7 +75,7 @@ namespace SDXImageWeb
         public bool HasConfig { get { return files.Any(f => f.Name.Equals("CONFIG  SYS")); } }
 
         internal int signatureLength = 0;
-        internal byte[] signature;
+        internal byte[] signature = new byte[] {};
 
 
         public bool OpenRom(byte[] data)
@@ -166,6 +169,56 @@ namespace SDXImageWeb
                     */
                     default:
                         return type.ToString();
+                }
+            }
+
+        }
+
+        public string Hardware
+        {
+            get
+            {
+                int hwid = GetHwIdent(cart);
+
+                switch (hwid)
+                {
+                    case -1:
+                        return string.Empty;
+                    case 0x00:
+                        return "ICD/FTe/intSDX 128";
+                    case 0x01:
+                        return "Atarimax Maxflash 1Mb";
+                    case 0x02:
+                        return "Atarimax Maxflash IDE";
+                    case 0x03:
+                        return "Atarimax Maxflash 8Mb";
+                    case 0x04:
+                        return "Turbo Freezer 2005";
+                    case 0x05:
+                        return "SIDE";
+                        //return "Foocart";
+                    case 0x06:
+                        return "SIC!";
+                    case 0x07:
+                        return "IDE+2.0";
+                    case 0x08:
+                        return "Ultimate";
+                    case 0x09:
+                        return "MyIDE-II RAM";
+                    case 0x0A:
+                        return "SIDE2";
+                    case 0x0B:
+                        return "MyIDE-II ROM";
+                    case 0x0C:
+                        return "SDX Super Cart";
+                    case 0x0D:
+                        return "RAMCART";
+                    case 0x0E:
+                        return "SIC!+";
+                    case 0x0F:
+                        return "SIDE3";
+                    default:
+                        return $"Other: {hwid}";
                 }
             }
 

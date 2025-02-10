@@ -29,6 +29,7 @@ namespace SDXImageWeb.Pages
         private MudTable<SDXFile>? mudTable;
 
         private int MAX_IMAGE_SIZE = (1024 * 1024) + 16;
+        private int MAX_FILE_SIZE = 1024 * 1024;
 
         public int PercentUsed
         {
@@ -79,9 +80,6 @@ namespace SDXImageWeb.Pages
 
             if (file.Size > MAX_IMAGE_SIZE)
             {
-                //message = "The chosen file is not a too large";
-                //messageType = MessageBarType.Error;
-                //onFileError = true;
                 Snackbar.Add("The file is too large (> 1024kB)", Severity.Error);
                 return;
             }
@@ -157,10 +155,6 @@ namespace SDXImageWeb.Pages
                 {
                     var fileStream = new FileStream("SDX1.ROM", FileMode.Open, FileAccess.Read);
                     using var streamRef = new DotNetStreamReference(stream: fileStream);
-
-                    //await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
-
-                    //fileStream.Position = 0;
 
                     var saveDialogNeeded = ! (await JsModule.InvokeAsync<bool>("supportsFileSystemAccess"));
                     if (!saveDialogNeeded)
@@ -261,23 +255,20 @@ namespace SDXImageWeb.Pages
             {
                 if (file.Size > sdxRom.FreeSpace)
                 {
-                    //message = "The chosen file is not a too large";
-                    //messageType = MessageBarType.Error;
-                    //onFileError = true;
                     Snackbar.Add("The file is too large.", Severity.Error);
                     return;
                 }
 
                 var fileData = new byte[file.Size];
 
-                await file.OpenReadStream(1024 * 1024).ReadAsync(fileData);
+                await file.OpenReadStream(MAX_FILE_SIZE).ReadAsync(fileData);
                 await Task.Delay(1);
 
                 //message = null;
                 if (sdxRom.InsertFile(file.Name, fileData))
                 {
                     IsSaved = false;
-
+                    Snackbar.Add($"{file.Name} has been added.", Severity.Success);
                 }
                 else
                 {

@@ -49,7 +49,14 @@ else
         <MudCardContent>
             <MudPaper Class="d-flex flex-row gap-4" Elevation="0">
                 <MudPaper Class="d-inline-flex flex-column flex-grow-1 gap-4">
-                    <MudText>Type: @sdxRom.Type</MudText>
+                    @if(string.IsNullOrEmpty(sdxRom.Hardware))
+                    {
+                        <MudText>Image type: @sdxRom.Type</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Hardware target: @sdxRom.Hardware</MudText>
+                    }
                     <MudText Typo="Typo.body2">@sdxRom.FileCount files</MudText>
                     <MudText Typo="Typo.body2">@sdxRom.FreeSpace of @sdxRom.Capacity bytes available</MudText>
                 </MudPaper>
@@ -100,14 +107,14 @@ else if (Loading)
         <MudAlert Severity="Severity.Warning">The files do not fit the image capacity !</MudAlert>
     }
 
-
+    <MudToolBar>
     <MudFileUpload T="IReadOnlyList<IBrowserFile>" Context="fileInput" FilesChanged="OnFileUploaded" MaximumFileCount="128">
             <ButtonTemplate>
                 <MudButton HtmlTag="label"
-                       Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       StartIcon="@Icons.Material.Filled.Upload"
-                       for="@fileInput">
+                        Variant="Variant.Filled"
+                        Color="Color.Primary"
+                        StartIcon="@Icons.Material.Filled.Upload"
+                        for="@fileInput">
                     Add files
                 </MudButton>
             </ButtonTemplate>
@@ -115,8 +122,11 @@ else if (Loading)
 
     @if (selectedItems.Count > 0)
     {
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"@onclick="DeleteFiles">Delete</MudButton>
+        <MudBadge Content="selectedItems.Count" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="DeleteFiles">Delete</MudButton>
+        </MudBadge>
     }
+     </MudToolBar>
 
     <MudTable Items="sdxRom.Files" Hover="true" SortLabel="Sort By" Elevation="0" RowsPerPage="100" Dense="true" MultiSelection="true"
           @bind-SelectedItems="selectedItems" Filter="new Func<SDXFile,bool>(FilterName)" @ref="mudTable">

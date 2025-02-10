@@ -646,21 +646,25 @@ bool CCAR::OpenRom(std::string romfile, bool bFiles)
 		{
 			SetType(1);	// assume ascending banks
 
-			char* buf = new char[3];
-			// read first 3 bytes to recognize the type
-			inpfile.read(buf, 3);
+			char* buf = new char[4];
+			// read first 4 bytes to recognize the type
+			inpfile.read(buf, 4);
 			if (memcmp(buf, "SDX", 3))				// signature not found ?
 			{
-				inpfile.seekg(-0x2000,inpfile.end);	// go to the last bank
-				inpfile.read(buf, 3);				// read 3 bytes
+				inpfile.seekg(-0x2000, inpfile.end);	// go to the last bank
+				inpfile.read(buf, 4);				// read 4 bytes
 				if (!memcmp(buf, "SDX", 3))			// check signature
+				{
 					SetType(2);						// descending banks if found
+				}
 				else
 				{
 					cout << "Bad image format (not SDX) !" << endl;
 					return false;					// not SDX 4.4 cart
 				}
 			}
+
+			sdxVersionInfo.hwid = buf[3];
 
 			if (length != GetCartSize())
 			{
@@ -1970,4 +1974,9 @@ int CCAR::GetNextCarBank(BYTE bankno)
 		return 4;
 
 	return bankno+1;
+}
+
+SdxVersionInfo* CCAR::GetSdxVersionInfo()
+{
+	return &sdxVersionInfo;
 }

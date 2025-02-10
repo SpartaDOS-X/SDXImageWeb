@@ -20,6 +20,12 @@
 
 typedef std::list<CCAREntry*> CCAREntryList;
 
+struct SdxVersionInfo
+{
+	unsigned char version;
+	unsigned char hwid;
+};
+
 class CCAR
 {
 public:
@@ -84,6 +90,8 @@ public:
 
 	bool limit8k;
 
+	SdxVersionInfo* GetSdxVersionInfo();
+
 private:
 
 	int GetNextCarBank(BYTE bankno);
@@ -102,6 +110,7 @@ private:
 	bool silent;
 	bool verbose;
 	
+	SdxVersionInfo sdxVersionInfo;
 };
 
 #endif // !defined(AFX_CAR_H__E54DD6DA_CA39_45A5_9E8D_5E0C865B9112__INCLUDED_)

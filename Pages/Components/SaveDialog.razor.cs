@@ -9,7 +9,7 @@ namespace SDXImageWeb.Pages.Components
 {
     public partial class SaveDialog
     {
-        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+        [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
         [Parameter] public string Url { get; set; } = string.Empty;
 
@@ -17,16 +17,14 @@ namespace SDXImageWeb.Pages.Components
 
         [Parameter] public string Title { get; set; } = "Text";
 
-        void Close() => MudDialog.Close(DialogResult.Ok(true));
-
         private void Cancel()
         {
-            MudDialog.Cancel();
+            MudDialog?.Cancel();
         }
 
         private void Save()
         {
-            MudDialog.Close(DialogResult.Ok(UrlText));
+            MudDialog?.Close(DialogResult.Ok(UrlText));
         }
   
     }
