@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "SDXImageWeb",
   "resources": {
-    "hash": "sha256-xCVeGvAhf8aCVHm2e8KIsNz2u3sNoRLVNY1M02wFN9s=",
+    "hash": "sha256-cMBym1JHYYnhIBUnhQ/XzLnqBJU/05WgfMxL4vh4VJo=",
     "jsModuleNative": {
       "dotnet.native.8.0.12.ro4zjtbb2z.js": "sha256-boul3v0Fv/x9mD7ES4Unu2a7rbQ9A7ZLml9vunXcE+A="
     },
@@ -9,7 +9,7 @@
       "dotnet.runtime.8.0.12.ouv6u08ga9.js": "sha256-aTAnT1r/EAWev8oI/mTFI9nH3RsfA5M822bNiGhok6U="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-iqFbDKVCIyUft0Vloborowegec0rxT63c2ApNT5PunI="
+      "dotnet.native.wasm": "sha256-/cgSEpza483qqb0v4nosj8UqNZZNg9PLdipqE1iPId4="
     },
     "assembly": {
       "Microsoft.AspNetCore.Components.Forms.wasm": "sha256-iTbbGFyAnshueHzy5zCXMmDILd19mwnepns5ZoVxcwc=",
@@ -29,8 +29,8 @@
       "Microsoft.Extensions.Primitives.wasm": "sha256-Ms2HR5Gpug/0uRAzdk4SUNT76Ml3CjFv9Jo+dUIMGac=",
       "Microsoft.JSInterop.wasm": "sha256-HGXg7CR3VIN6DEWQgK748jRSKUmUzjE0XIPT6AG3Qw8=",
       "Microsoft.JSInterop.WebAssembly.wasm": "sha256-2bohIT7/qEC9nPtjBrESwyddQ86eqIfABSFaK7lb55A=",
-      "MudBlazor.wasm": "sha256-2L+Vw9JJFYHtvcAL/d2pDZhhHCylT9CFH2+pmD0P72g=",
-      "SDXImageWeb.wasm": "sha256-PpPEwCmv6u8G/6knVNTibMROwSgva3GHiBGZqPU2J2c=",
+      "MudBlazor.wasm": "sha256-Pb8xt6EGy0PHcjLSx35/OMH4MRsarbjqN3vn8QSdy8s=",
+      "SDXImageWeb.wasm": "sha256-A998QfK6REWjp0fxxfT2mEMeZAKAopnOGLOtNP4NmzA=",
       "System.Collections.Concurrent.wasm": "sha256-vL/xOXIE28c20ROKwrTL1nuyGo6426NVTkkHZUUMC1c=",
       "System.Collections.Immutable.wasm": "sha256-uLD2/O64dOzDfSkm1efhAsHUsWSvm6suKu71Znc30SY=",
       "System.Collections.wasm": "sha256-LzLwVrtLa7d9HRKPwnQEa5jP5qKZo8JVyq78d07VWY4=",
