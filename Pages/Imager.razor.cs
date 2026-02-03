@@ -328,7 +328,8 @@ namespace SDXImageWeb.Pages
                 outputList,
                 new JsonSerializerOptions
                 {
-                    WriteIndented = true
+                    WriteIndented = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 });
             DownloadFileList(json, "json");
         }
