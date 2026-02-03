@@ -6,6 +6,9 @@ using Microsoft.JSInterop;
 using MudBlazor;
 using System.Reflection.Metadata;
 using System;
+using System.Text.Json;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SDXImageWeb.Pages
 {
@@ -291,5 +294,58 @@ namespace SDXImageWeb.Pages
             return false;
         }
 
+        private async void DownloadFileList(string filelist, string fileExtension)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(filelist);
+            var memoryStream = new MemoryStream(bytes);
+            DateTime now = DateTime.Now;
+            String timestamp = now.ToString("s");
+            
+            var fileName = $"filelist.{timestamp}.{fileExtension}";
+            using var streamRef = new DotNetStreamReference(stream: memoryStream);
+            await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex FilenameRegex();
+
+        private async void OnFileListJSON()
+        {
+            List<DumpSDXFile> outputList = [];
+            foreach (SDXFile currentFile in sdxRom.Files)
+            {
+                String sanitizedName = FilenameRegex().Replace(currentFile.Name, ".");
+
+                DumpSDXFile sdxFile = new()
+                {
+                    Name = sanitizedName, 
+                    Size = currentFile.Size.ToString()
+                };
+                outputList.Add(sdxFile);
+            }
+
+            var json = JsonSerializer.Serialize(
+                outputList,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+            DownloadFileList(json, "json");
+            // byte[] bytes = Encoding.UTF8.GetBytes(json);
+            // var memoryStream = new MemoryStream(bytes);
+            // DateTime now = DateTime.Now;
+            // String timestamp = now.ToString("s");
+            
+            // var fileName = $"filelist.{timestamp}.json";
+            // using var streamRef = new DotNetStreamReference(stream: memoryStream);
+            // await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+
+    }
+
+    public class DumpSDXFile
+    {
+        public string Name { get; set;} = string.Empty;
+        public string Size { get; set; } = string.Empty;
     }
 }
