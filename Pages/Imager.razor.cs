@@ -331,14 +331,6 @@ namespace SDXImageWeb.Pages
                     WriteIndented = true
                 });
             DownloadFileList(json, "json");
-            // byte[] bytes = Encoding.UTF8.GetBytes(json);
-            // var memoryStream = new MemoryStream(bytes);
-            // DateTime now = DateTime.Now;
-            // String timestamp = now.ToString("s");
-            
-            // var fileName = $"filelist.{timestamp}.json";
-            // using var streamRef = new DotNetStreamReference(stream: memoryStream);
-            // await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         }
 
     }
