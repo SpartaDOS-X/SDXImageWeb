@@ -9,6 +9,7 @@ using System;
 using System.Text.Json;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace SDXImageWeb.Pages
 {
@@ -317,12 +318,9 @@ namespace SDXImageWeb.Pages
                         .ToLower();
         }
 
-        [GeneratedRegex(@"\s+")]
-        private static partial Regex FilenameRegex();
-
-        private async void OnFileListCSV()
+        private SortedDictionary<string, DumpSDXFile> GetDumpSDXFileSortedDictionary()
         {
-            var filesDict = new SortedDictionary<string, DumpSDXFile>();
+            var dumpFilesDict = new SortedDictionary<string, DumpSDXFile>();
 
             foreach (SDXFile currentFile in sdxRom.Files)
             {
@@ -335,13 +333,20 @@ namespace SDXImageWeb.Pages
                     SHA1 = GetSHA1String(fileByteArray)
                 };
 
-                filesDict.Add(sanitizedFileName, dumpFile);
+                dumpFilesDict.Add(sanitizedFileName, dumpFile);
             }
+            return dumpFilesDict;
+        }
 
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex FilenameRegex();
+
+        private async void OnFileListCSV()
+        {
             StringBuilder sb = new();
             sb.AppendLine("filename,size_in_bytes,sha1_checksum");
 
-            foreach(KeyValuePair<string, DumpSDXFile> pair in filesDict)
+            foreach(KeyValuePair<string, DumpSDXFile> pair in GetDumpSDXFileSortedDictionary())
             {
                 DumpSDXFile file = pair.Value;
                 sb.AppendLine($"{file.Name},{file.Size},{file.SHA1}");
@@ -352,24 +357,14 @@ namespace SDXImageWeb.Pages
 
         private async void OnFileListJSON()
         {
-            List<DumpSDXFile> outputList = [];
-
-            foreach (SDXFile currentFile in sdxRom.Files)
+            List<DumpSDXFile> sortedDumpList = [];
+            foreach(KeyValuePair<string, DumpSDXFile> pair in GetDumpSDXFileSortedDictionary())
             {
-                byte[] fileByteArray = sdxRom.GetFileContents(currentFile);
-                string sanitizedFileName = FilenameRegex().Replace(currentFile.Name, ".");
-                DumpSDXFile dumpFile = new()
-                {
-                    Name = sanitizedFileName,
-                    Size = currentFile.Size.ToString(),
-                    SHA1 = GetSHA1String(fileByteArray)
-                };
-
-                outputList.Add(dumpFile);
+                sortedDumpList.Add(pair.Value);
             }
 
             var json = JsonSerializer.Serialize(
-                outputList,
+                sortedDumpList,
                 new JsonSerializerOptions
                 {
                     WriteIndented = true,
