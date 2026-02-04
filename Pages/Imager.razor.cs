@@ -302,7 +302,7 @@ namespace SDXImageWeb.Pages
             DateTime now = DateTime.Now;
             string timestamp = now.ToString("s");
             
-            var fileName = $"filelist.{timestamp}.{fileExtension}";
+            var fileName = $"sdx_img_filelist.{timestamp}.{fileExtension}";
             using var streamRef = new DotNetStreamReference(stream: memoryStream);
             await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         }
