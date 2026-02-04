@@ -299,7 +299,7 @@ namespace SDXImageWeb.Pages
             byte[] bytes = Encoding.UTF8.GetBytes(filelist);
             var memoryStream = new MemoryStream(bytes);
             DateTime now = DateTime.Now;
-            String timestamp = now.ToString("s");
+            string timestamp = now.ToString("s");
             
             var fileName = $"filelist.{timestamp}.{fileExtension}";
             using var streamRef = new DotNetStreamReference(stream: memoryStream);
@@ -308,6 +308,31 @@ namespace SDXImageWeb.Pages
 
         [GeneratedRegex(@"\s+")]
         private static partial Regex FilenameRegex();
+
+        private async void OnFileListCSV()
+        {
+            StringBuilder sb = new();
+            sb.AppendLine("filename,size_in_bytes,sha1_checksum");
+
+            foreach (SDXFile currentFile in sdxRom.Files)
+            {
+                byte[] fileContents = sdxRom.GetFileContents(currentFile);
+                // using SHA1 instead of MD5
+                // https://learn.microsoft.com/en-us/dotnet/core/compatibility/cryptography/5.0/cryptography-apis-not-supported-on-blazor-webassembly
+                byte[] sha1sum = System.Security.Cryptography.SHA1.HashData(fileContents);
+                string sanitizedName = FilenameRegex().Replace(currentFile.Name, ".");
+                sb.Append(sanitizedName)
+                    .Append(',')
+                    .Append(currentFile.Size.ToString())
+                    .Append(',')
+                    .AppendLine(BitConverter.ToString(sha1sum)
+                        .Replace("-", "")
+                        .ToLower()
+                    );
+            }
+
+            DownloadFileList(sb.ToString(), "csv");
+        }
 
         private async void OnFileListJSON()
         {
