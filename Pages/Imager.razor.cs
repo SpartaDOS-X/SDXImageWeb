@@ -354,15 +354,18 @@ namespace SDXImageWeb.Pages
         private async void OnFileListJSON()
         {
             List<DumpSDXFile> outputList = [];
+
             foreach (SDXFile currentFile in sdxRom.Files)
             {
-                String sanitizedName = FilenameRegex().Replace(currentFile.Name, ".");
-
+                byte[] fileByteArray = sdxRom.GetFileContents(currentFile);
+                string sanitizedFileName = FilenameRegex().Replace(currentFile.Name, ".");
                 DumpSDXFile dumpFile = new()
                 {
-                    Name = sanitizedName, 
-                    Size = currentFile.Size.ToString()
+                    Name = sanitizedFileName,
+                    Size = currentFile.Size.ToString(),
+                    SHA1 = GetSHA1String(fileByteArray)
                 };
+
                 outputList.Add(dumpFile);
             }
 
@@ -382,6 +385,6 @@ namespace SDXImageWeb.Pages
     {
         public string Name { get; set;} = string.Empty;
         public string Size { get; set; } = string.Empty;
-        public string? SHA1 { get; set; }
+        public string SHA1 { get; set; } = string.Empty;
     }
 }
