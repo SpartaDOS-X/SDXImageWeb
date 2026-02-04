@@ -9,7 +9,6 @@ using System;
 using System.Text.Json;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Collections.Specialized;
 
 namespace SDXImageWeb.Pages
 {
@@ -307,7 +306,7 @@ namespace SDXImageWeb.Pages
             await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         }
 
-        private string GetSHA1String(byte[] fileByteArray)
+        private static string GetSHA1String(byte[] fileByteArray)
         {
             // using SHA1 instead of MD5
             // https://learn.microsoft.com/en-us/dotnet/core/compatibility/cryptography/5.0/cryptography-apis-not-supported-on-blazor-webassembly
@@ -374,7 +373,7 @@ namespace SDXImageWeb.Pages
                 new JsonSerializerOptions
                 {
                     WriteIndented = true,
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
                 });
             DownloadFileList(json, "json");
         }
