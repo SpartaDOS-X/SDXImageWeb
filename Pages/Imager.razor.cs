@@ -9,6 +9,7 @@ using System;
 using System.Text.Json;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections.Specialized;
 
 namespace SDXImageWeb.Pages
 {
@@ -306,29 +307,45 @@ namespace SDXImageWeb.Pages
             await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         }
 
+        private string GetSHA1String(byte[] fileByteArray)
+        {
+            // using SHA1 instead of MD5
+            // https://learn.microsoft.com/en-us/dotnet/core/compatibility/cryptography/5.0/cryptography-apis-not-supported-on-blazor-webassembly
+            byte[] sha1ByteArray = System.Security.Cryptography.SHA1.HashData(fileByteArray);
+
+            return BitConverter.ToString(sha1ByteArray)
+                        .Replace("-", "")
+                        .ToLower();
+        }
+
         [GeneratedRegex(@"\s+")]
         private static partial Regex FilenameRegex();
 
         private async void OnFileListCSV()
         {
-            StringBuilder sb = new();
-            sb.AppendLine("filename,size_in_bytes,sha1_checksum");
+            var filesDict = new SortedDictionary<string, DumpSDXFile>();
 
             foreach (SDXFile currentFile in sdxRom.Files)
             {
-                byte[] fileContents = sdxRom.GetFileContents(currentFile);
-                // using SHA1 instead of MD5
-                // https://learn.microsoft.com/en-us/dotnet/core/compatibility/cryptography/5.0/cryptography-apis-not-supported-on-blazor-webassembly
-                byte[] sha1sum = System.Security.Cryptography.SHA1.HashData(fileContents);
-                string sanitizedName = FilenameRegex().Replace(currentFile.Name, ".");
-                sb.Append(sanitizedName)
-                    .Append(',')
-                    .Append(currentFile.Size.ToString())
-                    .Append(',')
-                    .AppendLine(BitConverter.ToString(sha1sum)
-                        .Replace("-", "")
-                        .ToLower()
-                    );
+                byte[] fileByteArray = sdxRom.GetFileContents(currentFile);
+                string sanitizedFileName = FilenameRegex().Replace(currentFile.Name, ".");
+                DumpSDXFile dumpFile = new()
+                {
+                    Name = sanitizedFileName,
+                    Size = currentFile.Size.ToString(),
+                    SHA1 = GetSHA1String(fileByteArray)
+                };
+
+                filesDict.Add(sanitizedFileName, dumpFile);
+            }
+
+            StringBuilder sb = new();
+            sb.AppendLine("filename,size_in_bytes,sha1_checksum");
+
+            foreach(KeyValuePair<string, DumpSDXFile> pair in filesDict)
+            {
+                DumpSDXFile file = pair.Value;
+                sb.AppendLine($"{file.Name},{file.Size},{file.SHA1}");
             }
 
             DownloadFileList(sb.ToString(), "csv");
@@ -341,12 +358,12 @@ namespace SDXImageWeb.Pages
             {
                 String sanitizedName = FilenameRegex().Replace(currentFile.Name, ".");
 
-                DumpSDXFile sdxFile = new()
+                DumpSDXFile dumpFile = new()
                 {
                     Name = sanitizedName, 
                     Size = currentFile.Size.ToString()
                 };
-                outputList.Add(sdxFile);
+                outputList.Add(dumpFile);
             }
 
             var json = JsonSerializer.Serialize(
@@ -365,5 +382,6 @@ namespace SDXImageWeb.Pages
     {
         public string Name { get; set;} = string.Empty;
         public string Size { get; set; } = string.Empty;
+        public string? SHA1 { get; set; }
     }
 }
