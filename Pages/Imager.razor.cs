@@ -373,6 +373,19 @@ namespace SDXImageWeb.Pages
             DownloadFileList(json, "json");
         }
 
+        private async void OnFileListPlainText()
+        {
+            StringBuilder sb = new();
+
+            foreach(KeyValuePair<string, DumpSDXFile> pair in GetDumpSDXFileSortedDictionary())
+            {
+                DumpSDXFile file = pair.Value;
+                sb.AppendLine(file.Name);
+            }
+
+            DownloadFileList(sb.ToString(), "txt");
+        }
+
     }
 
     public class DumpSDXFile

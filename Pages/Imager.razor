@@ -130,7 +130,7 @@ else if (Loading)
 
     <MudExpansionPanels>
         <MudExpansionPanel Text="Download image file lists" MaxHeight="450" Gutters="true">
-            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TextSnippet" Color="Color.Info" @onclick="CloseImage">Plain Text</MudButton>
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TextSnippet" Color="Color.Info" @onclick="OnFileListPlainText">Plain Text</MudButton>
             <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TextSnippet" Color="Color.Info" @onclick="OnFileListJSON">JSON</MudButton>
             <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TextSnippet" Color="Color.Info" @onclick="OnFileListCSV">CSV</MudButton>
             <MudText>Click an button to download the file list for this image.  "Plain Text" includes filenames only, JSON and CSV formats include file sizes and checksums.</MudText>
