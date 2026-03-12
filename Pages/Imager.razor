@@ -128,6 +128,15 @@ else if (Loading)
     }
      </MudToolBar>
 
+    <MudExpansionPanels>
+        <MudExpansionPanel Text="Download image file lists" MaxHeight="450" Gutters="true">
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TextSnippet" Color="Color.Info" @onclick="OnFileListPlainText">Plain Text</MudButton>
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TextSnippet" Color="Color.Info" @onclick="OnFileListJSON">JSON</MudButton>
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TextSnippet" Color="Color.Info" @onclick="OnFileListCSV">CSV</MudButton>
+            <MudText>Click an button to download the file list for this image.  "Plain Text" includes filenames only, JSON and CSV formats include file sizes and checksums.</MudText>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+    <br />
     <MudTable Items="sdxRom.Files" Hover="true" SortLabel="Sort By" Elevation="0" RowsPerPage="100" Dense="true" MultiSelection="true"
           @bind-SelectedItems="selectedItems" Filter="new Func<SDXFile,bool>(FilterName)" @ref="mudTable">
         <ToolBarContent>

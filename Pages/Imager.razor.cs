@@ -6,6 +6,10 @@ using Microsoft.JSInterop;
 using MudBlazor;
 using System.Reflection.Metadata;
 using System;
+using System.Text.Json;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace SDXImageWeb.Pages
 {
@@ -291,5 +295,103 @@ namespace SDXImageWeb.Pages
             return false;
         }
 
+        private async void DownloadFileList(string filelist, string fileExtension)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(filelist);
+            var memoryStream = new MemoryStream(bytes);
+            DateTime now = DateTime.Now;
+            string timestamp = now.ToString("s");
+            
+            var fileName = $"sdx_img_filelist.{timestamp}.{fileExtension}";
+            using var streamRef = new DotNetStreamReference(stream: memoryStream);
+            await JsModule.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+
+        private static string GetSHA1String(byte[] fileByteArray)
+        {
+            // using SHA1 instead of MD5
+            // https://learn.microsoft.com/en-us/dotnet/core/compatibility/cryptography/5.0/cryptography-apis-not-supported-on-blazor-webassembly
+            byte[] sha1ByteArray = System.Security.Cryptography.SHA1.HashData(fileByteArray);
+
+            return BitConverter.ToString(sha1ByteArray)
+                        .Replace("-", "")
+                        .ToLower();
+        }
+
+        private SortedDictionary<string, DumpSDXFile> GetDumpSDXFileSortedDictionary()
+        {
+            var dumpFilesDict = new SortedDictionary<string, DumpSDXFile>();
+
+            foreach (SDXFile currentFile in sdxRom.Files)
+            {
+                byte[] fileByteArray = sdxRom.GetFileContents(currentFile);
+                string sanitizedFileName = FilenameRegex().Replace(currentFile.Name, ".");
+                DumpSDXFile dumpFile = new()
+                {
+                    Name = sanitizedFileName,
+                    Size = currentFile.Size.ToString(),
+                    SHA1 = GetSHA1String(fileByteArray)
+                };
+
+                dumpFilesDict.Add(sanitizedFileName, dumpFile);
+            }
+            return dumpFilesDict;
+        }
+
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex FilenameRegex();
+
+        private async void OnFileListCSV()
+        {
+            StringBuilder sb = new();
+            sb.AppendLine("filename,size_in_bytes,sha1_checksum");
+
+            foreach(KeyValuePair<string, DumpSDXFile> pair in GetDumpSDXFileSortedDictionary())
+            {
+                DumpSDXFile file = pair.Value;
+                sb.AppendLine($"{file.Name},{file.Size},{file.SHA1}");
+            }
+
+            DownloadFileList(sb.ToString(), "csv");
+        }
+
+        private async void OnFileListJSON()
+        {
+            List<DumpSDXFile> sortedDumpList = [];
+            foreach(KeyValuePair<string, DumpSDXFile> pair in GetDumpSDXFileSortedDictionary())
+            {
+                sortedDumpList.Add(pair.Value);
+            }
+
+            var json = JsonSerializer.Serialize(
+                sortedDumpList,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+                });
+            DownloadFileList(json, "json");
+        }
+
+        private async void OnFileListPlainText()
+        {
+            StringBuilder sb = new();
+
+            foreach(KeyValuePair<string, DumpSDXFile> pair in GetDumpSDXFileSortedDictionary())
+            {
+                DumpSDXFile file = pair.Value;
+                sb.AppendLine(file.Name);
+            }
+
+            DownloadFileList(sb.ToString(), "txt");
+        }
+
+    }
+
+    public class DumpSDXFile
+    {
+        public string Name { get; set;} = string.Empty;
+        public string Size { get; set; } = string.Empty;
+        public string SHA1 { get; set; } = string.Empty;
     }
 }
